@@ -1,0 +1,7 @@
+
+zendesk:
+  api:
+    endpoint: "https://zccwenchy.zendesk.com"
+    auth:
+      email: "wcdutreuil@gmail.com"
+      password: "L5wQ3?uY6!Czp-u"
