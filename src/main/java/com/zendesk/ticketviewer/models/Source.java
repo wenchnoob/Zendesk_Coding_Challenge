@@ -5,8 +5,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.stereotype.Component;
 
+
 @Component
 @lombok.Data
+// For an API Source to and from do not exist and rel is null
 @JsonIgnoreProperties({"to", "from"})
 public class Source {
 
