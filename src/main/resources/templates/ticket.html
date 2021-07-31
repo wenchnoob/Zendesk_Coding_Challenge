@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'Ticket ' + ${ticket.id}"></title>
+    <link rel="stylesheet" type="text/css" href="/styles/basestyles.css">
+</head>
+<body>
+    <h1 th:text="'Ticket ' + ${ticket.id}"></h1>
+    <p th:text="${ticket.subject}"></p>
+    <p th:text="${ticket.description}"></p>
+    <p th:text="${ticket.submitterId}"></p>
+    <p th:text="${ticket.status}"></p>
+    <p th:text="${ticket.priority}"></p>
+    <button type="button" class="collapsible">View Raw</button>
+    <div class="content">
+        <pre th:text="${raw}"></pre>
+    </div>
+    <a href="/tickets/cur">Go Back</a>
+
+    <script src="/scripts/collapsible.js"></script>
+</body>
+</html>

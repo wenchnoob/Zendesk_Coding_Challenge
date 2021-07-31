@@ -9,6 +9,8 @@ import java.util.List;
 @lombok.Data
 public class TicketsResponse {
 
+    public static final TicketsResponse FAIL = new TicketsResponse(null, null, null);
+
     private List<Ticket> tickets;
     private Meta meta;
     private Links links;

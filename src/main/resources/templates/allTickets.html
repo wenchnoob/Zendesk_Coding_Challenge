@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>All Tickets</title>
+    <link rel="stylesheet" type="text/css" href="/styles/basestyles.css">
+</head>
+<body>
+    <div class="header">
+        <h1>All Tickets</h1>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/tickets/prev">Previous Page</a></li>
+            <li><a href="/tickets/next">Next Page</a></li>
+        </ul>
+    </div>
+    <div id="ticketsList">
+        <div th:each="ticket : ${tickets}">
+            <button type="button" class="collapsible" th:text="'Expand Ticket ' + ${ticket.id}">Expand</button>
+            <div class="content">
+                <h2 th:text="'Ticket ' + ${ticket.id}"></h2>
+                <p th:text="${ticket.subject}"></p>
+                <p th:text="${ticket.description}"></p>
+                <p th:text="${ticket.submitterId}"></p>
+                <p th:text="${ticket.status}"></p>
+                <p th:text="${ticket.priority}"></p>
+                <p><a href="#" class="btn btn-info" role="button" th:href="@{'/tickets/' + ${ticket.id}}">View</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="/scripts/collapsible.js"></script>
+</body>
+</html>
