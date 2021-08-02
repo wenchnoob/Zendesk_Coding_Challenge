@@ -43,3 +43,11 @@
         page you were on, Or click View Raw to view the Json Payload for that specific ticket
 
     5. If you ever land on the /myError page simply click Go Home to go back to the index page.
+
+### To run the tests
+
+    Simply go to the TicketServiceTest file and change the properties, then go to the
+    TicketviewerApplicationTests file and click the run button to run the entire suite.
+
+## Finally
+### Please feel free to direct any questions to wcdutreuil@gmail.com

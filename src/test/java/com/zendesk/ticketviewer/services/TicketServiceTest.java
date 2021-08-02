@@ -3,80 +3,67 @@ package com.zendesk.ticketviewer.services;
 import com.zendesk.ticketviewer.models.*;
 import com.zendesk.ticketviewer.services.models.PaginatedResponse;
 import com.zendesk.ticketviewer.utils.IOUtils;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
+@ExtendWith({MockitoExtension.class, SpringExtension.class})
+@ContextConfiguration(classes = {com.zendesk.ticketviewer.services.TicketService.class,
+                                com.zendesk.ticketviewer.TicketViewerApplication.class},
+loader = AnnotationConfigContextLoader.class)
 public class TicketServiceTest {
 
 
-    @InjectMocks
+    @Autowired
     TicketService ticketService;
 
-    @Mock
-    WebClient client;
-
-    @Mock
-    WebClient.RequestHeadersUriSpec spec;
-
-    @Mock
-    WebClient.ResponseSpec resSpec;
-
-    IOUtils ioUtils = new IOUtils();
-
-    TicketsResponse fake = new TicketsResponse(
-            Arrays.asList(
-                    new Ticket(),
-                    new Ticket(),
-                    new Ticket()
-            ),
-            new Meta(false, null, null),
-            new Links(null, null)
-    );
-
-    PaginatedResponse fakeTicketsResponse = new PaginatedResponse(fake);
-
-    Ticket fakeTicket = new Ticket();
-    Supplier<TicketResponse> fakeTicketResponse = () -> {
-        fakeTicket.setId(10);
-        return new TicketResponse (
-                fakeTicket
-        );
-    };
-
-    @BeforeEach
-    void setUp() {
-        when(client.get()).thenReturn(spec);
-        when(spec.retrieve()).thenReturn(resSpec);
-
+    @BeforeAll
+    static void setProperties() {
+        // Replace this with your properties
+        System.setProperty("zendesk.api.baseurl","https://zccnewwenchy.zendesk.com");
+        System.setProperty("zendesk.api.auth.email", "wcdutreuil@gmail.com");
+        System.setProperty("zendesk.api.auth.password", "*******");
     }
 
     @Test
     void fetchTickets() {
-        when(resSpec.bodyToMono(String.class)).thenReturn(Mono.just(ioUtils.prettifyJson(fake)));
         PaginatedResponse pr = ticketService.fetchTickets();
-        String expected = ioUtils.prettifyJson(fakeTicketsResponse);
-        String actual = ioUtils.prettifyJson(pr);
-        assertEquals(expected, actual);
+        List<Ticket> tickets = pr.getCurPage().getTickets();
+        assertTrue(tickets != null);
+    }
+
+    @Test
+    void fetchTicketsWithPageSize() {
+        PaginatedResponse pr = ticketService.fetchTicketsWithPageSize(30);
+        List<Ticket> tickets = pr.getCurPage().getTickets();
+        assertTrue(tickets != null && tickets.size() <= 30);
     }
 
     @Test
     void getTicketById() {
-        fakeTicket.setId(10);
-        when(resSpec.bodyToMono(String.class)).thenReturn(Mono.just(ioUtils.prettifyJson(fakeTicketResponse.get())));
-        Ticket pr = ticketService.getTicketById(10);
-        assertEquals(fakeTicket, pr);
+        Ticket ticket = ticketService.getTicketById(12);
+        assertTrue(ticket == null || ticket.getId() == 12);
     }
+
+
 }

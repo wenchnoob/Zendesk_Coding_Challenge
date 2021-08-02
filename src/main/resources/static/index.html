@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Zendesk Ticket Viewer</title>
+    <link rel="stylesheet" href="/styles/basestyles.css">
 </head>
 <body>
-    <h1>Welcome to the Zendesk Ticket Viewer</h1>
-    <form method="post" action="/tickets">
+    <h1 class="header">Welcome to the Zendesk Ticket Viewer</h1>
+    <form method="post" action="/tickets" class="container">
         <label>Subdomain: <input type="text" name="domain"></label>
         <label>Email: <input type="text" name="email"></label>
         <label>Password: <input type="password" name="password"></label>
-        <input type="submit" placeholder="View Tickets">
+        <input type="submit" title="View Tickets" id="ticketButton">
     </form>
 </body>
 </html>

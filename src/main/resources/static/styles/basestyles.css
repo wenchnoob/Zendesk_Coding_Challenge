@@ -1,5 +1,6 @@
 /* Style the button that is used to open and close the collapsible content */
 .collapsible {
+    text-align: center;
     background-color: #eee;
     color: #444;
     cursor: pointer;
@@ -21,23 +22,90 @@
     padding: 0 18px;
     /*display: none;*/
     max-height: 0;
+    margin-bottom: 12px;
     overflow: hidden;
     background-color: #f1f1f1;
 }
 
 ul {
     list-style-type: none;
-    margin: 0;
+    display:flex;
+    margin: 10px;
     padding: 0;
 }
 
 li {
     float: left;
+    text-align: center;
 }
 
 a {
-
+    text-decoration: none;
+    text-align: center;
+    color: inherit;
     display: block;
     padding: 8px;
     background-color: #dddddd;
+    border-radius: 10px;
+    border: 2px solid black;
+}
+
+li a:hover {
+    opacity: 0.6;
+}
+
+#navUl {
+    justify-content: space-evenly;
+}
+
+/*
+#navUl li {
+    width: auto;
+}
+*/
+
+/* Bordered form */
+form {
+    border: 3px solid #f1f1f1;
+}
+
+/* Full-width inputs */
+input[type=text], input[type=password] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+/* Set a style for all buttons */
+#ticketButton {
+    background-color: #04AA6D;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+/* Add a hover effect for buttons */
+#ticketButton:hover {
+    opacity: 0.8;
+}
+
+/* Add padding to containers */
+.container {
+    box-sizing: border-box;
+    border-radius: 30px;
+    margin: 0 auto;
+    padding: 16px;
+    width: 50%;
+}
+
+.header {
+    align-items: center;
+    text-align: center;
+    margin: 30px auto;
 }
