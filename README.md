@@ -3,13 +3,14 @@
 ### To install this application
 
 
-####Through IDE
+#### Through IDE
     Simply clone this repo and initialize a new project from existing source in your IDE.
     Then simply click the run button in your IDE and this application should start up on
     port 8080. Navigate to localhost:8080 to begin using the application. If port 8080 is
     in use by another process on your computer simply change the port to an available one
     throught the application.properties configuration file.
-####In Terminal
+    
+#### In Terminal
     Simply clone this repository and navigate in to the root of the folder, then
     execute this command:
 
@@ -18,7 +19,7 @@
     this should start the application on port 8080 or the port you have specified in the
     applications.properties file.
 
-###To use this application
+### To use this application
     1. Navigate to localhost:{port_number}
 
     2. Fill out the information requested on the page and hit submit
