@@ -5,6 +5,7 @@ import com.zendesk.ticketviewer.services.TicketService;
 
 public class PaginatedResponse {
 
+
     TicketsResponse curPage;
 
     public PaginatedResponse(TicketsResponse firstPage) {

@@ -41,9 +41,9 @@ public class BasicEndpoints {
     public ModelAndView getTickets(@RequestParam(value = "domain", required = false) String domain,
                                    @RequestParam(value = "email", required = false) String email,
                                    @RequestParam(value = "password", required = false) String password) {
-        if (domain != null) ticketService.setUrl(domain);
-        if (email != null) ticketService.setEmail(email);
-        if (password != null) ticketService.setPassword(password);
+        if (domain != null && domain.length() >= 1) ticketService.setUrl(domain);
+        if (email != null && domain.length() >= 1) ticketService.setEmail(email);
+        if (password != null && domain.length() >= 1) ticketService.setPassword(password);
 
         pr = ticketService.fetchTickets();
         return getTicketsPage();

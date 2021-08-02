@@ -3,24 +3,10 @@ package com.zendesk.ticketviewer.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zendesk.ticketviewer.models.Ticket;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.Scanner;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @Component
 public class IOUtils {
-
-    public String printPage(List<Ticket> ticketList) {
-        return ticketList
-                .stream()
-                .map(
-                        ticket -> toStringTicket(ticket)
-                ).collect(Collectors.joining("\n\n"));
-    }
 
     public String prettifyJson(Object jsonObject) {
         ObjectMapper mapper = new ObjectMapper();
@@ -31,7 +17,7 @@ public class IOUtils {
         }
     }
 
-    public String toStringTicket(@NonNull Ticket ticket) {
+    public String toStringTicket(Ticket ticket) {
         StringBuilder sb = new StringBuilder()
                 .append("Ticket Details for Ticket " + ticket.getId() + " \n")
                 .append("\tSubject: " + (ticket.getSubject() == null ? "No Subject" : ticket.getSubject()) + "\n")

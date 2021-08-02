@@ -4,25 +4,22 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zendesk.ticketviewer.models.Ticket;
+import com.zendesk.ticketviewer.models.TicketResponse;
 import com.zendesk.ticketviewer.models.TicketsResponse;
 import com.zendesk.ticketviewer.services.models.PaginatedResponse;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Component
 public class TicketService {
 
@@ -41,6 +38,17 @@ public class TicketService {
     @Getter
     private static final String endpoint = "/api/v2/tickets?page[size]=%d";
 
+    @Getter
+    private static final String idEndpoint = "/api/v2/tickets/%d";
+
+    private static WebClient client;
+
+    @Autowired
+    public TicketService(WebClient webClient) {
+        this.client = webClient;
+    }
+
+
     public PaginatedResponse fetchTickets() {
         return fetchTicketsWithPageSize(25);
     }
@@ -51,14 +59,10 @@ public class TicketService {
 
     public static TicketsResponse fetchFromUrl(String fetchUrl) {
         fetchUrl = URLDecoder.decode(fetchUrl, StandardCharsets.UTF_8);
-        WebClient client = WebClient
-                .builder()
-                .baseUrl(fetchUrl)
-                .build();
-
         client.method(HttpMethod.GET);
 
         WebClient.RequestHeadersUriSpec spec = client.get();
+        spec.uri(fetchUrl);
         spec.header("Authorization", "Basic " + Base64.encodeBase64String((email + ":" + password).getBytes(StandardCharsets.UTF_8)));
         spec.accept(MediaType.ALL);
 
@@ -73,33 +77,31 @@ public class TicketService {
             TicketsResponse ticketsResponse = mapper.readerFor(TicketsResponse.class).readValue(ugJson);
 
             return ticketsResponse;
-        } catch (WebClientResponseException | JsonProcessingException e) {
+        } catch (Exception e) {
             return TicketsResponse.FAIL;
         }
     }
 
-    public List<Ticket> getAllTickets() {
-        PaginatedResponse res = fetchTickets();
-        List<Ticket> tickets = new ArrayList<>();
-
-        TicketsResponse cur;
-        while(res.hasPage()) {
-            cur = res.getCurPage();
-            tickets.addAll(cur.getTickets());
-            res.getNextPage();
-        }
-
-        return tickets;
-    }
-
     public Ticket getTicketById(long id) {
+        String fetchUrl = URLDecoder.decode(url + String.format(idEndpoint, id), StandardCharsets.UTF_8);
+        client.method(HttpMethod.GET);
+
+        WebClient.RequestHeadersUriSpec spec = client.get();
+        spec.uri(fetchUrl);
+        spec.header("Authorization", "Basic " + Base64.encodeBase64String((email + ":" + password).getBytes(StandardCharsets.UTF_8)));
+        spec.accept(MediaType.ALL);
+
         try {
-            return getAllTickets()
-                    .stream()
-                    .parallel()
-                    .filter(ticket -> ticket.getId() == id)
-                    .collect(Collectors.toList())
-                    .get(0);
+            Mono<String> res = spec.retrieve().bodyToMono(String.class);
+
+            String ugJson = res.block();
+
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+            TicketResponse ticketResponse = mapper.readerFor(TicketResponse.class).readValue(ugJson);
+
+            return ticketResponse != null ? ticketResponse.getTicket() : null;
         } catch (Exception e) {
             return null;
         }
