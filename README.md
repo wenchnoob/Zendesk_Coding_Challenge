@@ -13,9 +13,10 @@
 #### In Terminal
     Simply clone this repository and navigate in to the root of the folder, then
     execute this command:
+##
 
         mvn clean package && cd target && java -jar -Dspring.profiles.active=local ticketviewer-0.0.1-SNAPSHOT.jar
-
+##
     this should start the application on port 8080 or the port you have specified in the
     applications.properties file.
 
